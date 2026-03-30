@@ -48,10 +48,6 @@ public class UserApp {
 
         Collections.sort(users,(u1, u2) -> u1.getEmail().compareTo(u2.getEmail()));
 
-        for(int i = 0; i<users.size(); i++){
-            System.out.println(users.get(i));
-        }
-
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("out1.txt"))) {
             for(int i = 0; i<users.size(); i++){
@@ -61,8 +57,6 @@ public class UserApp {
         } catch (IOException e) {
             System.err.println("Error creating the file" + e.getMessage());
         }
-
-
 
 
     }
