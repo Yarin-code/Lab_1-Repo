@@ -3,14 +3,13 @@ import java.util.regex.Pattern;
 public class User {
 
     private static final String EMAIL_REGEX = "^(?=.{1,}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9][a-zA-Z0-9.-]*\\.[a-zA-Z]{2,}$";
-    private static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#.,+^*&$%])[a-zA-Z0-9!@#.,+^*&$%]+$";
+    private static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#.,+_()*&^%$?])[a-zA-Z\\d!@#.,+_()*&^%$?]+$";
 
     private static final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
     private static final Pattern passwordPattern = Pattern.compile(PASSWORD_REGEX);
 
     private String email;
     private String password;
-
 
 
     public User(String email, String password) throws Exception {
@@ -70,8 +69,6 @@ public class User {
 
         return email + " " + password;
 
-
     }
-
 
 }
