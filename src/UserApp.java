@@ -12,6 +12,7 @@ public class UserApp {
 
         ArrayList<User> users = new ArrayList<User>();
 
+        // opening the input file
         try {
 
             File myFile = new File("Users.txt");
@@ -32,7 +33,7 @@ public class UserApp {
                     continue;
 
                 }
-
+                //if user is valid, add to ArrayList of User
                 users.add(newUser);
 
             }
@@ -45,10 +46,10 @@ public class UserApp {
             System.out.println("File not found");
 
         }
-
+        // lexicographically sorting the ArrayList
         Collections.sort(users,(u1, u2) -> u1.getEmail().compareTo(u2.getEmail()));
 
-
+        // creating new out1.exe file, and storing the ArrayList in it
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("out1.txt"))) {
             for(int i = 0; i<users.size(); i++){
                 writer.write(String.valueOf(users.get(i)));
@@ -57,7 +58,7 @@ public class UserApp {
         } catch (IOException e) {
             System.err.println("Error creating the file" + e.getMessage());
         }
-
+        
 
     }
 

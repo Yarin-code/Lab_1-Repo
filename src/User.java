@@ -11,9 +11,10 @@ public class User {
     private String email;
     private String password;
 
-
+    // constructor of User
     public User(String email, String password) throws Exception {
 
+        // first we check the email and password based on regex rules
         if (!emailPattern.matcher(email).matches()) {
 
             throw new Exception(email + " " + password +" Please enter a valid Email as username");
@@ -26,7 +27,7 @@ public class User {
 
         }
 
-
+        // after checking regex, we check the length of the email and password
         if(email.length() > 50) {
 
             throw new Exception(email + " " + password +" Username is too long, try a shorter one");
@@ -46,6 +47,7 @@ public class User {
             throw new Exception(email + " " + password +" Your password is too long, try a shorter one");
 
         }
+
 
 
         this.email = email;
