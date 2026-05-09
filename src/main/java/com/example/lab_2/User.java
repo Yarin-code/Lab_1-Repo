@@ -6,7 +6,7 @@ public class User {
     private String email;
     private String password;
 
-    private static final String EMAIL_REGEX = "^(?=.{1,50}$)[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9][a-zA-Z0-9-]*(\\.[a-zA-Z]{2,})+$";;
+    private static final String EMAIL_REGEX = "^(?=.{1,50}$)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9][a-zA-Z0-9.-]*\\.[a-zA-Z]{2,}$";
     private static final String PASSWORD_REGEX = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#.,+_()*&^%$?])[a-zA-Z\\d!@#.,+_()*&^%$?]{8,12}$";
 
     // בדיקה שהשם משתמש והסיסמא עומדים בדרישות
