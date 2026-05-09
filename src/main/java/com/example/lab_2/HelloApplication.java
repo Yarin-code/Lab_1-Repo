@@ -4,28 +4,17 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.util.List;
+import java.util.Scanner;
 
 public class HelloApplication extends Application {
 
-    // פרמטרים דיפולטיבים
-    public static int maxAttempts = 3;
-    public static int lockoutTime = 10; // בשניות
+    // משתנים סטטיים שיכילו את הערכים שנקלטו בטרמינל
+    public static int maxAttempts;
+    public static int lockoutTime;
 
     @Override
     public void start(Stage stage) throws Exception {
-        // קריאת פרמטרים משורת הפקודה
-        List<String> args = getParameters().getRaw();
-        if (args.size() >= 2) {
-            try {
-                maxAttempts = Integer.parseInt(args.get(0));
-                lockoutTime = Integer.parseInt(args.get(1));
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid runtime parameters. Using defaults (3 attempts, 10 seconds).");
-            }
-        }
-
+        // טעינת המסך רק לאחר שהפרמטרים כבר קיימים במערכת
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Users Login");
@@ -37,6 +26,19 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
+        // מימוש הדרישה: קבלת פרמטרים בשורת הפקודה בזמן ריצה (לא משורת הרצה)
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("--- Lab 3 Setup ---");
+        System.out.print("Enter maximum failed attempts (n): ");
+        maxAttempts = scanner.nextInt();
+
+        System.out.print("Enter lockout duration in seconds (t): ");
+        lockoutTime = scanner.nextInt();
+
+        System.out.println("Starting GUI...");
+
+        // רק עכשיו, אחרי קבלת הפרמטרים, נפעיל את ה-JavaFX
         launch(args);
     }
 }

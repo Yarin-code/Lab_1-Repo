@@ -53,7 +53,7 @@ public class LoginController {
         String emailInput = usernameField.getText();
         String passInput = passwordField.getText();
 
-        // חיפוש משתמש לפי אימייל
+        //  חיפוש המשתמש
         User foundUser = null;
         for (User user : validUsers) {
             if (user.getEmail().equalsIgnoreCase(emailInput)) {
@@ -63,35 +63,56 @@ public class LoginController {
         }
 
         if (foundUser == null) {
-            errorLabel.setText("User not found"); // השגיאה אם הרשימה ריקה
+            errorLabel.setText("User or password do not match");
             return;
         }
 
         final User targetUser = foundUser;
 
+        if (targetUser.isLocked()) {
+            long remaining = (targetUser.getLockoutEndTime() - System.currentTimeMillis()) / 1000;
+            if (remaining > 0) {
+                errorLabel.setText("User is locked! Try again in " + remaining + " seconds.");
+                return; //
+            }
+        }
+
         if (targetUser.getPassword().equals(passInput)) {
-            // חוט ב' - בדיקת חסימה
+            // חוט ב' - בדיקת תקינות בזמן אמת
             new Thread(() -> {
                 if (targetUser.isLocked()) {
-                    Platform.runLater(() -> errorLabel.setText("User is locked. Try again later."));
+                    Platform.runLater(() -> errorLabel.setText("Access Denied: You are still locked."));
                 } else {
                     targetUser.resetFailedAttempts();
                     Platform.runLater(this::openWelcomeScreen);
                 }
             }).start();
         } else {
-            // חוט א' - ניהול ניסיונות כושלים
+            // חוט א' - עדכון ניסיונות וחסימה
             new Thread(() -> {
                 targetUser.incrementFailedAttempts();
                 int attempts = targetUser.getFailedAttempts();
 
                 if (attempts >= HelloApplication.maxAttempts) {
-                    long lockEnd = System.currentTimeMillis() + (HelloApplication.lockoutTime * 1000L);
-                    targetUser.setLockoutEndTime(lockEnd);
+                    // חסימה: קביעת זמן הסיום
+                    long endTime = System.currentTimeMillis() + (HelloApplication.lockoutTime * 1000L);
+                    targetUser.setLockoutEndTime(endTime);
+
                     Platform.runLater(() -> errorLabel.setText("Too many attempts! Locked for " + HelloApplication.lockoutTime + "s."));
+
+                    try {
+                        Thread.sleep(HelloApplication.lockoutTime * 1000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    targetUser.resetFailedAttempts();
+                    targetUser.setLockoutEndTime(0);
+
+                    Platform.runLater(() -> errorLabel.setText("Lockout ended. You can try again."));
                 } else {
-                    int remaining = HelloApplication.maxAttempts - attempts;
-                    Platform.runLater(() -> errorLabel.setText("Wrong password. " + remaining + " attempts left."));
+                    int left = HelloApplication.maxAttempts - attempts;
+                    Platform.runLater(() -> errorLabel.setText("Wrong password. " + left + " attempts left."));
                 }
             }).start();
         }
